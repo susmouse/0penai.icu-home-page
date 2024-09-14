@@ -104,7 +104,9 @@ onMounted(() => {
     } else {
         // 如果没有保存的书签，使用默认书签
         bookmarks.push(
+            { "icon": "🔍", "url": "https://www.bing.com", "name": "Bing", "iconType": "auto" },
             { "icon": "🤖", "url": "https://openai.com", "name": "ChatGPT", "iconType": "auto" },
+            { "icon": "🔮", "url": "https://claude.ai", "name": "Claude", "iconType": "auto" }
         );
     }
 });
