@@ -9,7 +9,7 @@
 
         <!-- 搜索栏区域 -->
         <div class="search-bar">
-            <input v-model="searchQuery" @keyup.enter="search" placeholder="输入你要搜索的内容">
+            <input v-model="searchQuery" @keyup.enter="search" placeholder="输入你要搜索的内容" class="search-input">
             <button @click="search">Search</button>
         </div>
 
@@ -543,5 +543,17 @@ select {
     /* 鼠标悬停时向上浮动10px */
     filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.15));
     /* 减轻阴影效果 */
+}
+
+.search-input {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    /* 添加过渡效果 */
+}
+
+.search-input:focus {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* 添加阴影效果 */
+    transform: scale(1.01);
+    /* 放大输入框 */
 }
 </style>
