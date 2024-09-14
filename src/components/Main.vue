@@ -3,7 +3,8 @@
     <div class="navigation-hub">
         <!-- 标题区域 -->
         <div class="logo">
-            <h1>0penai.icu</h1>
+            <!-- <h1>0penai.icu</h1> -->
+            <img src="../assets/logo.svg" alt="0penai.icu">
         </div>
 
         <!-- 搜索栏区域 -->
