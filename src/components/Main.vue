@@ -230,7 +230,6 @@ body {
 
 .navigation-hub {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    max-width: 1200px;
     width: 100%;
     padding: 2rem;
     display: flex;
