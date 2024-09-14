@@ -4,7 +4,7 @@
         <!-- 标题区域 -->
         <div class="logo">
             <!-- <h1>0penai.icu</h1> -->
-            <img src="../assets/logo.svg" alt="0penai.icu">
+            <img src="../assets/logo.svg" alt="0penai.icu" class="logo-image">
         </div>
 
         <!-- 搜索栏区域 -->
@@ -217,7 +217,7 @@ function getDefaultIcon(url) {
 
     // 示例：https://organisational-cyan-rooster.faviconkit.com/openai.com/144
     // 去除"https://"，然后在后面添加"/144"
-    url=url.replace('https://','');
+    url = url.replace('https://', '');
     return `https://sunny-magenta-pinniped.faviconkit.com/${url}/256`;
 }
 </script>
@@ -527,5 +527,21 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+.logo-image {
+    width: auto;
+    /* 保持原大小 */
+    height: auto;
+    /* 保持原大小 */
+    transition: transform 0.3s ease, filter 0.3s ease;
+    /* 添加过渡效果 */
+}
+
+.logo-image:hover {
+    transform: translateY(-10px) scale(1.1);
+    /* 鼠标悬停时向上浮动10px */
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.15));
+    /* 减轻阴影效果 */
 }
 </style>
