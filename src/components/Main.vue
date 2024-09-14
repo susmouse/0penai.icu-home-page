@@ -67,8 +67,8 @@
                 </label>
                 <!-- 模态框操作按钮：保存和取消 -->
                 <div class="modal-actions">
-                    <button @click="saveBookmark">Save</button>
-                    <button @click="cancelEdit">Cancel</button>
+                    <button @click="saveBookmark">保存</button>
+                    <button @click="cancelEdit">取消</button>
                 </div>
             </div>
         </div>
@@ -212,8 +212,12 @@ function cancelEdit() {
  */
 function getDefaultIcon(url) {
     // 这里我们使用 Google 的 favicon 服务作为示例
-    // 实际使用时可能需要替换为自己的服务或其他可靠的服务
-    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}`;
+    // return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}`;
+
+    // 示例：https://organisational-cyan-rooster.faviconkit.com/openai.com/144
+    // 去除"https://"，然后在后面添加"/144"
+    url=url.replace('https://','');
+    return `https://sunny-magenta-pinniped.faviconkit.com/${url}/256`;
 }
 </script>
 
