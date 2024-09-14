@@ -42,8 +42,7 @@
                 <h2>{{ isNewBookmark ? '添加' : '删除' }}书签</h2>
                 <label>
                     链接:
-                    <input v-model="editingBookmark.url" placeholder="例如：https://www.baidu.com"
-                        @blur="autoFetchIcon">
+                    <input v-model="editingBookmark.url" placeholder="例如：https://www.baidu.com" @blur="autoFetchIcon">
                 </label>
                 <label>
                     名称:
@@ -83,7 +82,6 @@ import { ref, reactive, onMounted, watch } from 'vue';
 const searchQuery = ref('');
 // 书签列表
 const bookmarks = reactive([]);
-
 // 是否处于编辑状态
 const isEditing = ref(false);
 // 当前编辑的书签索引
@@ -106,8 +104,7 @@ onMounted(() => {
     } else {
         // 如果没有保存的书签，使用默认书签
         bookmarks.push(
-            { "icon": "🔍", "url": "https://www.baidu.com", "name": "Baidu", "iconType": "text" },
-            { "icon": "📰", "url": "https://news.qq.com", "name": "QQ News", "iconType": "text" },
+            { "icon": "🤖", "url": "https://openai.com", "name": "ChatGPT", "iconType": "auto" },
         );
     }
 });
@@ -226,12 +223,15 @@ body {
     padding: 0;
     height: 100%;
     background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .navigation-hub {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     max-width: 1200px;
-    margin: 0 auto;
+    width: 100%;
     padding: 2rem;
     display: flex;
     flex-direction: column;
@@ -346,7 +346,8 @@ body {
 }
 
 .bookmark .icon {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    /* 放大图标 */
     margin-bottom: 0.5rem;
     height: 40px;
     display: flex;
@@ -505,9 +506,12 @@ body {
 }
 
 .icon-image {
-    width: 32px;
-    height: 32px;
+    width: 50px;
+    /* 放大图标 */
+    height: 50px;
+    /* 放大图标 */
     object-fit: contain;
+    padding-bottom: 10px;
 }
 
 select {
@@ -518,6 +522,4 @@ select {
     border-radius: 4px;
     box-sizing: border-box;
 }
-
-/* 其他样式保持不变 */
 </style>
