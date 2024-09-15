@@ -119,10 +119,16 @@
 import { ref, reactive, onMounted, watch } from 'vue';
 
 // 搜索引擎相关
+
+// 搜索引擎列表
 const searchEngines = reactive([]);
+// 当前激活的搜索引擎
 const currentSearchEngine = ref({});
+// 是否显示搜索引擎下拉框
 const showSearchEngineDropdown = ref(false);
+// 是否正在编辑搜索引擎
 const isEditingSearchEngine = ref(false);
+// 正在编辑的搜索引擎
 const editingSearchEngine = reactive({
     name: '',
     url: '',
@@ -176,6 +182,7 @@ onMounted(() => {
         );
     }
 
+    // 读取本地存储的搜索引擎列表
     const savedSearchEngines = localStorage.getItem('searchEngines');
     if (savedSearchEngines) {
         searchEngines.push(...JSON.parse(savedSearchEngines));
@@ -196,19 +203,23 @@ watch(searchEngines, (newSearchEngines) => {
     setCurrentSearchEngine();
 }, { deep: true });
 
+// 监听书签列表的变化，保存到本地存储
 function setCurrentSearchEngine() {
     currentSearchEngine.value = searchEngines.find(engine => engine.isDefault) || searchEngines[0];
 }
 
+// 切换搜索引擎下拉框可见度
 function toggleSearchEngineDropdown() {
     showSearchEngineDropdown.value = !showSearchEngineDropdown.value;
 }
 
+// 选择对应搜索引擎
 function selectSearchEngine(index) {
     currentSearchEngine.value = searchEngines[index];
     showSearchEngineDropdown.value = false;
 }
 
+// 删除对应搜索引擎
 function deleteSearchEngine(index) {
     if (searchEngines.length > 1) {
         searchEngines.splice(index, 1);
@@ -220,6 +231,7 @@ function deleteSearchEngine(index) {
     }
 }
 
+// 打开添加搜索引擎模态框
 function openSearchEngineModal() {
     editingSearchEngine.name = '';
     editingSearchEngine.url = '';
@@ -228,6 +240,7 @@ function openSearchEngineModal() {
     showSearchEngineDropdown.value = false;
 }
 
+// 保存添加的搜索引擎
 function saveSearchEngine() {
     if (editingSearchEngine.name && editingSearchEngine.url) {
         searchEngines.push({ ...editingSearchEngine });
@@ -245,6 +258,7 @@ function saveSearchEngine() {
     }
 }
 
+// 取消编辑搜索引擎
 function cancelEditSearchEngine() {
     isEditingSearchEngine.value = false;
 }
