@@ -1,9 +1,9 @@
+```vue
 <template>
     <!-- 导航中心组件 -->
     <div class="navigation-hub">
         <!-- 标题区域 -->
         <div class="logo">
-            <!-- <h1>0penai.icu</h1> -->
             <img src="../assets/logo.svg" alt="0penai.icu" class="logo-image">
         </div>
 
@@ -20,8 +20,7 @@
                 <a :href="bookmark.url" target="_blank" rel="noopener noreferrer">
                     <!-- 根据书签的图标类型展示不同的图标 -->
                     <span class="icon" v-if="bookmark.iconType === 'text'">{{ bookmark.icon }}</span>
-                    <img v-else-if="bookmark.iconType === 'image'" :src="bookmark.icon" :alt="bookmark.name"
-                        class="icon-image">
+                    <span class="icon svg" v-else-if="bookmark.iconType === 'svg'" v-html="bookmark.icon"></span>
                     <img v-else :src="getDefaultIcon(bookmark.url)" :alt="bookmark.name" class="icon-image">
                     <span class="name">{{ bookmark.name }}</span>
                 </a>
@@ -40,10 +39,10 @@
         <!-- 编辑书签的模态框 -->
         <div v-if="isEditing" class="modal">
             <div class="modal-content">
-                <h2>{{ isNewBookmark ? '添加' : '删除' }}书签</h2>
+                <h2>{{ isNewBookmark ? '添加' : '编辑' }}书签</h2>
                 <label>
                     链接:
-                    <input v-model="editingBookmark.url" placeholder="例如：https://www.baidu.com" @blur="autoFetchIcon">
+                    <input v-model="editingBookmark.url" placeholder="例如：https://www.baidu.com">
                 </label>
                 <label>
                     名称:
@@ -53,8 +52,7 @@
                     图标类型:
                     <select v-model="editingBookmark.iconType">
                         <option value="text">文本</option>
-                        <option value="image">图片链接</option>
-                        <option value="auto">自动获取</option>
+                        <option value="svg">SVG</option>
                     </select>
                 </label>
                 <!-- 根据图标类型显示不同的输入框 -->
@@ -62,9 +60,9 @@
                     图标文本:
                     <input v-model="editingBookmark.icon" placeholder="例如：🌟">
                 </label>
-                <label v-if="editingBookmark.iconType === 'image'">
-                    图片链接:
-                    <input v-model="editingBookmark.icon" placeholder="例如：https://example.com/icon.png">
+                <label v-if="editingBookmark.iconType === 'svg'">
+                    SVG内容:
+                    <textarea v-model="editingBookmark.icon" placeholder="例如：<svg>...</svg>"></textarea>
                 </label>
                 <!-- 模态框操作按钮：保存和取消 -->
                 <div class="modal-actions">
@@ -94,7 +92,7 @@ const editingBookmark = reactive({
     icon: '',
     url: '',
     name: '',
-    iconType: 'auto'
+    iconType: 'text'
 });
 
 // 组件挂载时从本地存储加载书签
@@ -105,9 +103,9 @@ onMounted(() => {
     } else {
         // 如果没有保存的书签，使用默认书签
         bookmarks.push(
-            { "icon": "🔍", "url": "https://www.bing.com", "name": "Bing", "iconType": "auto" },
-            { "icon": "🤖", "url": "https://openai.com", "name": "ChatGPT", "iconType": "auto" },
-            { "icon": "🔮", "url": "https://claude.ai", "name": "Claude", "iconType": "auto" }
+            { "icon": "🔍", "url": "https://www.bing.com", "name": "Bing", "iconType": "text" },
+            { "icon": "🤖", "url": "https://openai.com", "name": "ChatGPT", "iconType": "text" },
+            { "icon": "🔮", "url": "https://claude.ai", "name": "Claude", "iconType": "text" }
         );
     }
 });
@@ -136,7 +134,7 @@ function addBookmark() {
     editingBookmark.icon = '';
     editingBookmark.url = '';
     editingBookmark.name = '';
-    editingBookmark.iconType = 'auto';
+    editingBookmark.iconType = 'text';
     isEditing.value = true;
 }
 
@@ -162,34 +160,11 @@ function deleteBookmark(index) {
 }
 
 /**
- * 自动获取图标
- * 如果图标类型为自动获取，尝试从后端获取图标
- */
-async function autoFetchIcon() {
-    if (editingBookmark.iconType === 'auto' && editingBookmark.url) {
-        try {
-            // 这里我们假设有一个后端 API 来获取网站图标
-            // 实际使用时需要替换为真实的 API 地址
-            const response = await fetch(`/api/fetch-icon?url=${encodeURIComponent(editingBookmark.url)}`);
-            const data = await response.json();
-            if (data.icon) {
-                editingBookmark.icon = data.icon;
-            }
-        } catch (error) {
-            console.error('Failed to fetch icon:', error);
-        }
-    }
-}
-
-/**
  * 保存书签
  * 将编辑或新增的书签保存到书签列表中
  */
 function saveBookmark() {
     const bookmarkToSave = { ...editingBookmark };
-    if (bookmarkToSave.iconType === 'auto') {
-        bookmarkToSave.icon = ''; // Clear the icon, we'll use getDefaultIcon
-    }
     if (isNewBookmark.value) {
         bookmarks.push(bookmarkToSave);
     } else {
@@ -355,11 +330,19 @@ body {
     font-size: 2.5rem;
     /* 放大图标 */
     margin-bottom: 0.5rem;
-    height: 40px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+}
+
+.bookmark .svg{
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .bookmark .name {
