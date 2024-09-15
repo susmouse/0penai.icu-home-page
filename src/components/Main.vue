@@ -337,7 +337,18 @@ body {
     overflow: hidden;
 }
 
-.bookmark .svg{
+.bookmark .icon {
+    font-size: 2.5rem;
+    /* 放大图标 */
+    margin-bottom: 0.5rem;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.bookmark .svg {
     height: 50px;
     width: 50px;
     display: flex;
@@ -352,6 +363,7 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
+    margin-top: 0.5rem; /* 添加顶部间距，使名称与图标对齐 */
 }
 
 .bookmark-actions {
