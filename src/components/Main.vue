@@ -101,10 +101,10 @@
                     <input id="search-engine-url" v-model="editingSearchEngine.url"
                         placeholder="例如：https://www.google.com/search?q=">
                 </div>
-                <div class="checkbox-group">
+                <!-- <div class="checkbox-group">
                     <span for="default-engine" style="width: 8rem;">设为默认：</span>
                     <input type="checkbox" id="default-engine" v-model="editingSearchEngine.isDefault">
-                </div>
+                </div> -->
                 <div class="modal-actions">
                     <button @click="saveSearchEngine" class="save-button">保存</button>
                     <button @click="cancelEditSearchEngine" class="cancel-button">取消</button>
@@ -203,7 +203,6 @@ watch(searchEngines, (newSearchEngines) => {
     setCurrentSearchEngine();
 }, { deep: true });
 
-// 监听书签列表的变化，保存到本地存储
 function setCurrentSearchEngine() {
     currentSearchEngine.value = searchEngines.find(engine => engine.isDefault) || searchEngines[0];
 }
@@ -216,6 +215,13 @@ function toggleSearchEngineDropdown() {
 // 选择对应搜索引擎
 function selectSearchEngine(index) {
     currentSearchEngine.value = searchEngines[index];
+    searchEngines.forEach((engine, i) => {
+        if (i !== index) {
+            engine.isDefault = false;
+        }else{
+            engine.isDefault = true;
+        }
+    })
     showSearchEngineDropdown.value = false;
 }
 
