@@ -125,7 +125,8 @@
 
         <!-- 在页面右下角添加一个按钮 -->
         <button class="import-button" @click="showSettingModal">
-            <span>⚙️</span>
+            <!-- <span>⚙️</span> -->
+            <img src="../assets/gear.svg" style="width: 2rem; height: 2rem;"/>
         </button>
         <!-- 直接进行设置的模态框 -->
         <div v-if="isSetting" class="modal">

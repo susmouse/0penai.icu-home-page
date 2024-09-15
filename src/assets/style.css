@@ -539,7 +539,7 @@ select {
 
 .import-button {
   position: fixed;
-  right: -15px; /* 初始位置在页面外 */
+  right: -15px;
   bottom: 20px;
   width: 35px;
   height: 35px;
@@ -550,9 +550,12 @@ select {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.3s ease; /* 添加过渡效果 */
+  opacity: 0.5;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .import-button:hover {
-  transform: translateX(-25px); /* 光标靠近时向左移动 */
+  transform: translateX(-25px) rotate(180deg); /* 光标靠近时向左移动并旋转 */
+  opacity: 1;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
