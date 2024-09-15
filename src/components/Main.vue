@@ -62,7 +62,8 @@
                 </label>
                 <label v-if="editingBookmark.iconType === 'svg'">
                     SVG内容:
-                    <textarea v-model="editingBookmark.icon" placeholder="例如：<svg>...</svg>"></textarea>
+                    <textarea v-model="editingBookmark.icon" placeholder="例如：<svg>...</svg>"
+                        class="model-textarea"></textarea>
                 </label>
                 <!-- 模态框操作按钮：保存和取消 -->
                 <div class="modal-actions">
@@ -363,7 +364,8 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
-    margin-top: 0.5rem; /* 添加顶部间距，使名称与图标对齐 */
+    margin-top: 0.5rem;
+    /* 添加顶部间距，使名称与图标对齐 */
 }
 
 .bookmark-actions {
@@ -446,6 +448,15 @@ body {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+.model-textarea{
+    width: 100%;
+    height: 100px;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    resize: vertical;
 }
 
 .modal-actions {
