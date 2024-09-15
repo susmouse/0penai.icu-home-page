@@ -1,11 +1,538 @@
-.container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('https://bing.img.run/uhd.php');
-    background-size: cover;
-    background-position: center;
-    z-index: -1; /* 确保背景在其他内容后面 */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navigation-hub {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.search-bar {
+  flex-grow: 1;
+  display: flex;
+}
+
+.search-bar input {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #333;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  transition: all 0.3s ease;
+}
+
+.search-bar input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: #333;
+  color: white;
+  border: 2px solid #333;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-bar button:hover {
+  background-color: #555;
+}
+
+.bookmarks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.bookmark {
+  width: 120px;
+  height: 120px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.add-bookmark {
+  width: 115px;
+  height: 115px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.bookmark:hover,
+.add-bookmark:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.bookmark a {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.bookmark .icon {
+  font-size: 2.5rem;
+  /* 放大图标 */
+  margin-bottom: 0.5rem;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bookmark .icon {
+  font-size: 2.5rem;
+  /* 放大图标 */
+  margin-bottom: 0.5rem;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bookmark .svg {
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookmark .name {
+  font-size: 0.9rem;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  margin-top: 0.5rem;
+  /* 添加顶部间距，使名称与图标对齐 */
+}
+
+.bookmark-actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bookmark:hover .bookmark-actions {
+  opacity: 1;
+}
+
+.bookmark-actions button {
+  flex: 1;
+  padding: 5px;
+  font-size: 0.7rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.bookmark-actions .edit {
+  background-color: #333;
+  color: white;
+}
+
+.bookmark-actions .delete {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.add-bookmark {
+  cursor: pointer;
+  font-size: 2rem;
+  color: #333;
+  border: 2px dashed #33333381;
+  background-color: transparent;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 300px;
+  animation: zoomIn 0.3s ease-out;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.model-textarea {
+  width: 100%;
+  height: 100px;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-actions button:first-child {
+  background-color: #333;
+  color: white;
+}
+
+.modal-actions button:last-child {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.icon-image {
+  width: 50px;
+  /* 放大图标 */
+  height: 50px;
+  /* 放大图标 */
+  object-fit: contain;
+  padding-bottom: 10px;
+}
+
+select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.logo-image {
+  width: auto;
+  /* 保持原大小 */
+  height: auto;
+  /* 保持原大小 */
+  transition: transform 0.3s ease, filter 0.3s ease;
+  /* 添加过渡效果 */
+}
+
+.logo-image:hover {
+  transform: translateY(-10px) scale(1.1);
+  /* 鼠标悬停时向上浮动10px */
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.15));
+  /* 减轻阴影效果 */
+}
+
+.search-input {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  /* 添加过渡效果 */
+}
+
+.search-input:focus {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* 添加阴影效果 */
+  transform: scale(1.01);
+  /* 放大输入框 */
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 2rem;
+}
+
+.search-engine-selector {
+  position: relative;
+  margin-right: 5px;
+}
+
+.search-engine-button {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 0.85rem 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-engine-button:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-arrow {
+  margin-left: 8px;
+  font-size: 0.8rem;
+}
+
+.search-engine-dropdown {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 150px;
+}
+
+.search-engine-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-engine-option:hover {
+  background-color: #f0f0f0;
+}
+
+.delete-engine {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #ff4d4d;
+  padding: 0 5px;
+}
+
+.delete-engine:hover {
+  color: #ff0000;
+}
+
+.add-engine {
+  border-top: 1px solid #ccc;
+  color: #333;
+  font-weight: bold;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #333;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.search-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: #333;
+  color: white;
+  border: 2px solid #333;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #555;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: bottom;
+  margin-bottom: 1.5rem;
+}
+
+.checkbox-group input {
+  margin-right: 0.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-actions button {
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+}
+
+.save-button {
+  background-color: #333;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #555;
+}
+
+.cancel-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
+}

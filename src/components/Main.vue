@@ -1,4 +1,3 @@
-```vue
 <template>
     <!-- 导航中心组件 -->
     <div class="navigation-hub">
@@ -7,30 +6,27 @@
             <img src="../assets/logo.svg" alt="0penai.icu" class="logo-image">
         </div>
 
-        <!-- 在 navigation-hub div 内的 search-bar div 前添加 -->
-        <div class="search-engines">
-            <button @click="toggleSearchEngineDropdown" class="search-engine-button">
-                <img :src="getDefaultIcon(currentSearchEngine.url)" :alt="currentSearchEngine.name"
-                    class="search-engine-icon">
-                <span class="search-engine-name">{{ currentSearchEngine.name }}</span>
-            </button>
-            <div v-if="showSearchEngineDropdown" class="search-engine-dropdown">
-                <div v-for="(engine, index) in searchEngines" :key="index" @click="selectSearchEngine(index)"
-                    class="search-engine-option">
-                    <img :src="getDefaultIcon(engine.url)" :alt="engine.name" class="search-engine-icon">
-                    <span>{{ engine.name }}</span>
-                </div>
-                <div @click="openSearchEngineModal" class="search-engine-option add-engine">
-                    <span>+ 添加搜索引擎</span>
+        <div class="search-container">
+            <div class="search-engine-selector">
+                <button @click="toggleSearchEngineDropdown" class="search-engine-button">
+                    {{ currentSearchEngine.name }}
+                    <span class="dropdown-arrow">▼</span>
+                </button>
+                <div v-if="showSearchEngineDropdown" class="search-engine-dropdown">
+                    <div v-for="(engine, index) in searchEngines" :key="index" class="search-engine-option">
+                        <span @click="selectSearchEngine(index)">{{ engine.name }}</span>
+                        <button @click="deleteSearchEngine(index)" class="delete-engine">×</button>
+                    </div>
+                    <div @click="openSearchEngineModal" class="search-engine-option add-engine">
+                        <span>+ 添加搜索引擎</span>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- 搜索栏区域 -->
-        <div class="search-bar">
-            <input v-model="searchQuery" @keyup.enter="search" :placeholder="`在 ${currentSearchEngine.name} 中搜索`"
-                class="search-input">
-            <button @click="search">Search</button>
+            <div class="search-bar">
+                <input v-model="searchQuery" @keyup.enter="search" :placeholder="`在 ${currentSearchEngine.name} 中搜索`"
+                    class="search-input">
+                <button @click="search" class="search-button">搜索</button>
+            </div>
         </div>
 
         <!-- 书签区域 -->
@@ -95,21 +91,23 @@
 
         <div v-if="isEditingSearchEngine" class="modal">
             <div class="modal-content">
-                <h2>{{ isNewSearchEngine ? '添加' : '编辑' }}搜索引擎</h2>
-                <label>
-                    名称:
-                    <input v-model="editingSearchEngine.name" placeholder="例如：Google">
-                </label>
-                <label>
-                    URL:
-                    <input v-model="editingSearchEngine.url" placeholder="例如：https://www.google.com/search?q=">
-                </label>
-                <label>
-                    <input type="checkbox" v-model="editingSearchEngine.isDefault"> 设为默认
-                </label>
+                <h2>添加搜索引擎</h2>
+                <div class="input-group">
+                    <label for="search-engine-name">名称:</label>
+                    <input id="search-engine-name" v-model="editingSearchEngine.name" placeholder="例如：Google">
+                </div>
+                <div class="input-group">
+                    <label for="search-engine-url">URL:</label>
+                    <input id="search-engine-url" v-model="editingSearchEngine.url"
+                        placeholder="例如：https://www.google.com/search?q=">
+                </div>
+                <div class="checkbox-group">
+                    <span for="default-engine" style="width: 8rem;">设为默认：</span>
+                    <input type="checkbox" id="default-engine" v-model="editingSearchEngine.isDefault">
+                </div>
                 <div class="modal-actions">
-                    <button @click="saveSearchEngine">保存</button>
-                    <button @click="cancelEditSearchEngine">取消</button>
+                    <button @click="saveSearchEngine" class="save-button">保存</button>
+                    <button @click="cancelEditSearchEngine" class="cancel-button">取消</button>
                 </div>
             </div>
         </div>
@@ -125,7 +123,6 @@ const searchEngines = reactive([]);
 const currentSearchEngine = ref({});
 const showSearchEngineDropdown = ref(false);
 const isEditingSearchEngine = ref(false);
-const isNewSearchEngine = ref(false);
 const editingSearchEngine = reactive({
     name: '',
     url: '',
@@ -212,8 +209,18 @@ function selectSearchEngine(index) {
     showSearchEngineDropdown.value = false;
 }
 
+function deleteSearchEngine(index) {
+    if (searchEngines.length > 1) {
+        searchEngines.splice(index, 1);
+        if (currentSearchEngine.value === searchEngines[index]) {
+            setCurrentSearchEngine();
+        }
+    } else {
+        alert('至少保留一个搜索引擎');
+    }
+}
+
 function openSearchEngineModal() {
-    isNewSearchEngine.value = true;
     editingSearchEngine.name = '';
     editingSearchEngine.url = '';
     editingSearchEngine.isDefault = false;
@@ -222,20 +229,20 @@ function openSearchEngineModal() {
 }
 
 function saveSearchEngine() {
-    if (isNewSearchEngine.value) {
+    if (editingSearchEngine.name && editingSearchEngine.url) {
         searchEngines.push({ ...editingSearchEngine });
+        if (editingSearchEngine.isDefault) {
+            searchEngines.forEach((engine, index) => {
+                if (index !== searchEngines.length - 1) {
+                    engine.isDefault = false;
+                }
+            });
+        }
+        isEditingSearchEngine.value = false;
+        setCurrentSearchEngine();
     } else {
-        Object.assign(searchEngines[editingSearchEngineIndex.value], editingSearchEngine);
+        alert('请填写完整的搜索引擎信息');
     }
-    if (editingSearchEngine.isDefault) {
-        searchEngines.forEach((engine, index) => {
-            if (index !== editingSearchEngineIndex.value) {
-                engine.isDefault = false;
-            }
-        });
-    }
-    isEditingSearchEngine.value = false;
-    setCurrentSearchEngine();
 }
 
 function cancelEditSearchEngine() {
@@ -331,427 +338,5 @@ function getDefaultIcon(url) {
 
 
 <style scoped>
-html,
-body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background-color: #f5f5f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.navigation-hub {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    width: 100%;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    min-height: 100vh;
-    box-sizing: border-box;
-    background-color: #f5f5f5;
-    color: #333;
-}
-
-.logo h1 {
-    font-size: 2.5rem;
-    font-weight: 300;
-    letter-spacing: 1px;
-    margin: 0;
-    animation: fadeInDown 0.5s ease-out;
-}
-
-.search-bar {
-    width: 100%;
-    max-width: 600px;
-    display: flex;
-    animation: fadeIn 0.5s ease-out;
-}
-
-.search-bar input {
-    flex-grow: 1;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    border: 2px solid #333;
-    border-right: none;
-    border-radius: 4px 0 0 4px;
-    transition: all 0.3s ease;
-}
-
-.search-bar input:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-}
-
-.search-bar button {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    background-color: #333;
-    color: white;
-    border: 2px solid #333;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.search-bar button:hover {
-    background-color: #555;
-}
-
-.bookmarks {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-}
-
-.bookmark {
-    width: 120px;
-    height: 120px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    animation: fadeIn 0.5s ease-out;
-}
-
-.add-bookmark {
-    width: 115px;
-    height: 115px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    animation: fadeIn 0.5s ease-out;
-}
-
-.bookmark:hover,
-.add-bookmark:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.bookmark a {
-    text-decoration: none;
-    color: inherit;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding: 1rem;
-    box-sizing: border-box;
-}
-
-.bookmark .icon {
-    font-size: 2.5rem;
-    /* 放大图标 */
-    margin-bottom: 0.5rem;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.bookmark .icon {
-    font-size: 2.5rem;
-    /* 放大图标 */
-    margin-bottom: 0.5rem;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.bookmark .svg {
-    height: 50px;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bookmark .name {
-    font-size: 0.9rem;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-    margin-top: 0.5rem;
-    /* 添加顶部间距，使名称与图标对齐 */
-}
-
-.bookmark-actions {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.bookmark:hover .bookmark-actions {
-    opacity: 1;
-}
-
-.bookmark-actions button {
-    flex: 1;
-    padding: 5px;
-    font-size: 0.7rem;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.bookmark-actions .edit {
-    background-color: #333;
-    color: white;
-}
-
-.bookmark-actions .delete {
-    background-color: #ff4d4d;
-    color: white;
-}
-
-.add-bookmark {
-    cursor: pointer;
-    font-size: 2rem;
-    color: #333;
-    border: 2px dashed #33333381;
-    background-color: transparent;
-}
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 300px;
-    animation: zoomIn 0.3s ease-out;
-}
-
-.modal-content h2 {
-    margin-top: 0;
-    color: #333;
-}
-
-.modal-content label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #333;
-}
-
-.modal-content input {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.model-textarea {
-    width: 100%;
-    height: 100px;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    box-sizing: border-box;
-    resize: vertical;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.modal-actions button {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.modal-actions button:first-child {
-    background-color: #333;
-    color: white;
-}
-
-.modal-actions button:last-child {
-    background-color: #f0f0f0;
-    color: #333;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes zoomIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-.icon-image {
-    width: 50px;
-    /* 放大图标 */
-    height: 50px;
-    /* 放大图标 */
-    object-fit: contain;
-    padding-bottom: 10px;
-}
-
-select {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.logo-image {
-    width: auto;
-    /* 保持原大小 */
-    height: auto;
-    /* 保持原大小 */
-    transition: transform 0.3s ease, filter 0.3s ease;
-    /* 添加过渡效果 */
-}
-
-.logo-image:hover {
-    transform: translateY(-10px) scale(1.1);
-    /* 鼠标悬停时向上浮动10px */
-    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.15));
-    /* 减轻阴影效果 */
-}
-
-.search-input {
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    /* 添加过渡效果 */
-}
-
-.search-input:focus {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* 添加阴影效果 */
-    transform: scale(1.01);
-    /* 放大输入框 */
-}
-
-.search-engines {
-  position: relative;
-  margin-right: 10px;
-}
-
-.search-engine-button {
-  display: flex;
-  align-items: center;
-  background-color: #fff;
-  border: 2px solid #333;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.search-engine-button:hover {
-  background-color: #f0f0f0;
-}
-
-.search-engine-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-}
-
-.search-engine-name {
-  font-size: 0.9rem;
-}
-
-.search-engine-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  min-width: 150px;
-}
-
-.search-engine-option {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-engine-option:hover {
-  background-color: #f0f0f0;
-}
-
-.add-engine {
-  border-top: 1px solid #ccc;
-  color: #333;
-  font-weight: bold;
-}
-
+@import "../assets/style.css";
 </style>
