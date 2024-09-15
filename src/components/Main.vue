@@ -3,7 +3,7 @@
     <div class="navigation-hub">
         <!-- 标题区域 -->
         <div class="logo">
-            <img src="../assets/logo.svg" alt="0penai.icu" class="logo-image">
+            <img src="../assets/logo.svg" alt="0penai.icu" class="logo-image" />
         </div>
 
         <div class="search-container">
@@ -15,7 +15,9 @@
                 <div v-if="showSearchEngineDropdown" class="search-engine-dropdown">
                     <div v-for="(engine, index) in searchEngines" :key="index" class="search-engine-option">
                         <span @click="selectSearchEngine(index)">{{ engine.name }}</span>
-                        <button @click="deleteSearchEngine(index)" class="delete-engine">×</button>
+                        <button @click="deleteSearchEngine(index)" class="delete-engine">
+                            ×
+                        </button>
                     </div>
                     <div @click="openSearchEngineModal" class="search-engine-option add-engine">
                         <span>+ 添加搜索引擎</span>
@@ -24,26 +26,31 @@
             </div>
             <div class="search-bar">
                 <input v-model="searchQuery" @keyup.enter="search" :placeholder="`在 ${currentSearchEngine.name} 中搜索`"
-                    class="search-input">
+                    class="search-input" />
                 <button @click="search" class="search-button">搜索</button>
             </div>
         </div>
 
         <!-- 书签区域 -->
-        <div class="bookmarks">
+        <div class="bookmarks" @dragover.prevent @drop="onDrop">
             <!-- 遍历书签列表，生成每个书签的展示内容 -->
-            <div v-for="(bookmark, index) in bookmarks" :key="index" class="bookmark">
+            <div v-for="(bookmark, index) in bookmarks" :key="index" class="bookmark" draggable="true"
+                @dragstart="startDrag($event, index)">
                 <a :href="bookmark.url" target="_blank" rel="noopener noreferrer">
                     <!-- 根据书签的图标类型展示不同的图标 -->
                     <span class="icon" v-if="bookmark.iconType === 'text'">{{ bookmark.icon }}</span>
                     <span class="icon svg" v-else-if="bookmark.iconType === 'svg'" v-html="bookmark.icon"></span>
-                    <img v-else :src="getDefaultIcon(bookmark.url)" :alt="bookmark.name" class="icon-image">
+                    <img v-else :src="getDefaultIcon(bookmark.url)" :alt="bookmark.name" class="icon-image" />
                     <span class="name">{{ bookmark.name }}</span>
                 </a>
                 <!-- 书签操作按钮：编辑和删除 -->
                 <div class="bookmark-actions">
-                    <button @click="editBookmark(index)" class="edit">编辑</button>
-                    <button @click="deleteBookmark(index)" class="delete">删除</button>
+                    <button @click="editBookmark(index)" class="edit">
+                        编辑
+                    </button>
+                    <button @click="deleteBookmark(index)" class="delete">
+                        删除
+                    </button>
                 </div>
             </div>
             <!-- 添加书签按钮 -->
@@ -58,11 +65,11 @@
                 <h2>{{ isNewBookmark ? '添加' : '编辑' }}书签</h2>
                 <label>
                     链接:
-                    <input v-model="editingBookmark.url" placeholder="例如：https://www.baidu.com">
+                    <input v-model="editingBookmark.url" placeholder="例如：https://www.baidu.com" />
                 </label>
                 <label>
                     名称:
-                    <input v-model="editingBookmark.name" placeholder="例如：百度">
+                    <input v-model="editingBookmark.name" placeholder="例如：百度" />
                 </label>
                 <label>
                     图标类型:
@@ -74,7 +81,7 @@
                 <!-- 根据图标类型显示不同的输入框 -->
                 <label v-if="editingBookmark.iconType === 'text'">
                     图标文本:
-                    <input v-model="editingBookmark.icon" placeholder="例如：🌟">
+                    <input v-model="editingBookmark.icon" placeholder="例如：🌟" />
                 </label>
                 <label v-if="editingBookmark.iconType === 'svg'">
                     SVG内容:
@@ -94,24 +101,27 @@
                 <h2>添加搜索引擎</h2>
                 <div class="input-group">
                     <label for="search-engine-name">名称:</label>
-                    <input id="search-engine-name" v-model="editingSearchEngine.name" placeholder="例如：Google">
+                    <input id="search-engine-name" v-model="editingSearchEngine.name" placeholder="例如：Google" />
                 </div>
                 <div class="input-group">
                     <label for="search-engine-url">URL:</label>
                     <input id="search-engine-url" v-model="editingSearchEngine.url"
-                        placeholder="例如：https://www.google.com/search?q=">
+                        placeholder="例如：https://www.google.com/search?q=" />
                 </div>
                 <!-- <div class="checkbox-group">
                     <span for="default-engine" style="width: 8rem;">设为默认：</span>
                     <input type="checkbox" id="default-engine" v-model="editingSearchEngine.isDefault">
                 </div> -->
                 <div class="modal-actions">
-                    <button @click="saveSearchEngine" class="save-button">保存</button>
-                    <button @click="cancelEditSearchEngine" class="cancel-button">取消</button>
+                    <button @click="saveSearchEngine" class="save-button">
+                        保存
+                    </button>
+                    <button @click="cancelEditSearchEngine" class="cancel-button">
+                        取消
+                    </button>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -255,6 +265,16 @@ function cancelEditSearchEngine() {
     isEditingSearchEngine.value = false;
 }
 
+/**
+ * 执行搜索操作
+ * 如果搜索词不为空，跳转到当前搜索引擎的搜索页面
+ */
+function search() {
+    if (searchQuery.value.trim()) {
+        window.location.href = `${currentSearchEngine.value.url}${encodeURIComponent(searchQuery.value)}`;
+    }
+}
+
 // 书签相关
 
 // 书签列表
@@ -278,15 +298,6 @@ watch(bookmarks, (newBookmarks) => {
     localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
 }, { deep: true });
 
-/**
- * 执行搜索操作
- * 如果搜索词不为空，跳转到当前搜索引擎的搜索页面
- */
-function search() {
-    if (searchQuery.value.trim()) {
-        window.location.href = `${currentSearchEngine.value.url}${encodeURIComponent(searchQuery.value)}`;
-    }
-}
 
 /**
  * 添加书签
@@ -345,18 +356,23 @@ function cancelEdit() {
 }
 
 /**
- * 获取默认图标
- * @param {string} url - 书签的URL
- * @returns {string} - 默认图标的URL
+ * 开始拖拽书签
+ * @param {Event} event - 拖拽事件
+ * @param {number} index - 被拖拽的书签索引
  */
-function getDefaultIcon(url) {
-    // 这里我们使用 Google 的 favicon 服务作为示例
-    // return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}`;
+function startDrag(event, index) {
+    event.dataTransfer.setData('bookmarkIndex', index);
+}
 
-    // 示例：https://organisational-cyan-rooster.faviconkit.com/openai.com/144
-    // 去除"https://"，然后在后面添加"/144"
-    // url = url.replace('https://', '');
-    return `https://sunny-magenta-pinniped.faviconkit.com/${url}/256`;
+/**
+ * 处理书签的拖放操作
+ * @param {Event} event - 拖放事件
+ */
+function onDrop(event) {
+    const dragIndex = event.dataTransfer.getData('bookmarkIndex');
+    const dropIndex = [...event.target.parentElement.children].indexOf(event.target);
+    const [draggedBookmark] = bookmarks.splice(dragIndex, 1);
+    bookmarks.splice(dropIndex, 0, draggedBookmark);
 }
 </script>
 
