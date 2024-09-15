@@ -7,9 +7,29 @@
             <img src="../assets/logo.svg" alt="0penai.icu" class="logo-image">
         </div>
 
+        <!-- 在 navigation-hub div 内的 search-bar div 前添加 -->
+        <div class="search-engines">
+            <button @click="toggleSearchEngineDropdown" class="search-engine-button">
+                <img :src="getDefaultIcon(currentSearchEngine.url)" :alt="currentSearchEngine.name"
+                    class="search-engine-icon">
+                <span class="search-engine-name">{{ currentSearchEngine.name }}</span>
+            </button>
+            <div v-if="showSearchEngineDropdown" class="search-engine-dropdown">
+                <div v-for="(engine, index) in searchEngines" :key="index" @click="selectSearchEngine(index)"
+                    class="search-engine-option">
+                    <img :src="getDefaultIcon(engine.url)" :alt="engine.name" class="search-engine-icon">
+                    <span>{{ engine.name }}</span>
+                </div>
+                <div @click="openSearchEngineModal" class="search-engine-option add-engine">
+                    <span>+ 添加搜索引擎</span>
+                </div>
+            </div>
+        </div>
+
         <!-- 搜索栏区域 -->
         <div class="search-bar">
-            <input v-model="searchQuery" @keyup.enter="search" placeholder="输入你要搜索的内容" class="search-input">
+            <input v-model="searchQuery" @keyup.enter="search" :placeholder="`在 ${currentSearchEngine.name} 中搜索`"
+                class="search-input">
             <button @click="search">Search</button>
         </div>
 
@@ -72,11 +92,45 @@
                 </div>
             </div>
         </div>
+
+        <div v-if="isEditingSearchEngine" class="modal">
+            <div class="modal-content">
+                <h2>{{ isNewSearchEngine ? '添加' : '编辑' }}搜索引擎</h2>
+                <label>
+                    名称:
+                    <input v-model="editingSearchEngine.name" placeholder="例如：Google">
+                </label>
+                <label>
+                    URL:
+                    <input v-model="editingSearchEngine.url" placeholder="例如：https://www.google.com/search?q=">
+                </label>
+                <label>
+                    <input type="checkbox" v-model="editingSearchEngine.isDefault"> 设为默认
+                </label>
+                <div class="modal-actions">
+                    <button @click="saveSearchEngine">保存</button>
+                    <button @click="cancelEditSearchEngine">取消</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
+
+// 搜索引擎相关
+const searchEngines = reactive([]);
+const currentSearchEngine = ref({});
+const showSearchEngineDropdown = ref(false);
+const isEditingSearchEngine = ref(false);
+const isNewSearchEngine = ref(false);
+const editingSearchEngine = reactive({
+    name: '',
+    url: '',
+    isDefault: false
+});
 
 // 搜索查询关键词
 const searchQuery = ref('');
@@ -124,7 +178,69 @@ onMounted(() => {
             }
         );
     }
+
+    const savedSearchEngines = localStorage.getItem('searchEngines');
+    if (savedSearchEngines) {
+        searchEngines.push(...JSON.parse(savedSearchEngines));
+    } else {
+        // 默认搜索引擎
+        searchEngines.push(
+            { name: 'Bing', url: 'https://www.bing.com/search?q=', isDefault: true },
+            { name: 'Google', url: 'https://www.google.com/search?q=', isDefault: false },
+            { name: 'Baidu', url: 'https://www.baidu.com/s?wd=', isDefault: false }
+        );
+    }
+    setCurrentSearchEngine();
 });
+
+// 监听搜索引擎列表的变化，保存到本地存储
+watch(searchEngines, (newSearchEngines) => {
+    localStorage.setItem('searchEngines', JSON.stringify(newSearchEngines));
+    setCurrentSearchEngine();
+}, { deep: true });
+
+function setCurrentSearchEngine() {
+    currentSearchEngine.value = searchEngines.find(engine => engine.isDefault) || searchEngines[0];
+}
+
+function toggleSearchEngineDropdown() {
+    showSearchEngineDropdown.value = !showSearchEngineDropdown.value;
+}
+
+function selectSearchEngine(index) {
+    currentSearchEngine.value = searchEngines[index];
+    showSearchEngineDropdown.value = false;
+}
+
+function openSearchEngineModal() {
+    isNewSearchEngine.value = true;
+    editingSearchEngine.name = '';
+    editingSearchEngine.url = '';
+    editingSearchEngine.isDefault = false;
+    isEditingSearchEngine.value = true;
+    showSearchEngineDropdown.value = false;
+}
+
+function saveSearchEngine() {
+    if (isNewSearchEngine.value) {
+        searchEngines.push({ ...editingSearchEngine });
+    } else {
+        Object.assign(searchEngines[editingSearchEngineIndex.value], editingSearchEngine);
+    }
+    if (editingSearchEngine.isDefault) {
+        searchEngines.forEach((engine, index) => {
+            if (index !== editingSearchEngineIndex.value) {
+                engine.isDefault = false;
+            }
+        });
+    }
+    isEditingSearchEngine.value = false;
+    setCurrentSearchEngine();
+}
+
+function cancelEditSearchEngine() {
+    isEditingSearchEngine.value = false;
+}
 
 // 监听书签列表的变化，保存到本地存储
 watch(bookmarks, (newBookmarks) => {
@@ -137,7 +253,7 @@ watch(bookmarks, (newBookmarks) => {
  */
 function search() {
     if (searchQuery.value.trim()) {
-        window.location.href = `https://www.bing.com/search?q=${encodeURIComponent(searchQuery.value)}`;
+        window.location.href = `${currentSearchEngine.value.url}${encodeURIComponent(searchQuery.value)}`;
     }
 }
 
@@ -208,7 +324,7 @@ function getDefaultIcon(url) {
 
     // 示例：https://organisational-cyan-rooster.faviconkit.com/openai.com/144
     // 去除"https://"，然后在后面添加"/144"
-    url = url.replace('https://', '');
+    // url = url.replace('https://', '');
     return `https://sunny-magenta-pinniped.faviconkit.com/${url}/256`;
 }
 </script>
@@ -577,4 +693,65 @@ select {
     transform: scale(1.01);
     /* 放大输入框 */
 }
+
+.search-engines {
+  position: relative;
+  margin-right: 10px;
+}
+
+.search-engine-button {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-engine-button:hover {
+  background-color: #f0f0f0;
+}
+
+.search-engine-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.search-engine-name {
+  font-size: 0.9rem;
+}
+
+.search-engine-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 150px;
+}
+
+.search-engine-option {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-engine-option:hover {
+  background-color: #f0f0f0;
+}
+
+.add-engine {
+  border-top: 1px solid #ccc;
+  color: #333;
+  font-weight: bold;
+}
+
 </style>
