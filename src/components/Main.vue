@@ -118,8 +118,6 @@
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
 
-// 搜索引擎相关
-
 // 搜索引擎列表
 const searchEngines = reactive([]);
 // 当前激活的搜索引擎
@@ -131,12 +129,11 @@ const isEditingSearchEngine = ref(false);
 // 正在编辑的搜索引擎
 const editingSearchEngine = reactive({
     name: '',
-    url: '',
-    isDefault: false
+    url: ''
 });
-
 // 搜索查询关键词
 const searchQuery = ref('');
+
 // 书签列表
 const bookmarks = reactive([]);
 // 是否处于编辑状态
@@ -153,7 +150,7 @@ const editingBookmark = reactive({
     iconType: 'text'
 });
 
-// 组件挂载时从本地存储加载书签
+// 组件挂载
 onMounted(() => {
     const savedBookmarks = localStorage.getItem('bookmarks');
     if (savedBookmarks) {
@@ -189,9 +186,9 @@ onMounted(() => {
     } else {
         // 默认搜索引擎
         searchEngines.push(
-            { name: 'Bing', url: 'https://www.bing.com/search?q=', isDefault: true },
-            { name: 'Google', url: 'https://www.google.com/search?q=', isDefault: false },
-            { name: 'Baidu', url: 'https://www.baidu.com/s?wd=', isDefault: false }
+            { name: 'Bing', url: 'https://www.bing.com/search?q=' },
+            { name: 'Google', url: 'https://www.google.com/search?q=' },
+            { name: 'Baidu', url: 'https://www.baidu.com/s?wd=' }
         );
     }
     setCurrentSearchEngine();
@@ -203,29 +200,34 @@ watch(searchEngines, (newSearchEngines) => {
     setCurrentSearchEngine();
 }, { deep: true });
 
+/**
+ * 设置当前激活的搜索引擎
+ * 默认使用搜索引擎列表中的最后一个引擎
+ */
 function setCurrentSearchEngine() {
-    currentSearchEngine.value = searchEngines.find(engine => engine.isDefault) || searchEngines[0];
+    currentSearchEngine.value = searchEngines[searchEngines.length - 1] || searchEngines[0];
 }
 
-// 切换搜索引擎下拉框可见度
+/**
+ * 切换搜索引擎下拉框可见度
+ */
 function toggleSearchEngineDropdown() {
     showSearchEngineDropdown.value = !showSearchEngineDropdown.value;
 }
 
-// 选择对应搜索引擎
+/**
+ * 选择对应搜索引擎
+ * @param {number} index - 要选择的搜索引擎索引
+ */
 function selectSearchEngine(index) {
     currentSearchEngine.value = searchEngines[index];
-    searchEngines.forEach((engine, i) => {
-        if (i !== index) {
-            engine.isDefault = false;
-        }else{
-            engine.isDefault = true;
-        }
-    })
     showSearchEngineDropdown.value = false;
 }
 
-// 删除对应搜索引擎
+/**
+ * 删除对应搜索引擎
+ * @param {number} index - 要删除的搜索引擎索引
+ */
 function deleteSearchEngine(index) {
     if (searchEngines.length > 1) {
         searchEngines.splice(index, 1);
@@ -237,26 +239,22 @@ function deleteSearchEngine(index) {
     }
 }
 
-// 打开添加搜索引擎模态框
+/**
+ * 打开添加搜索引擎模态框
+ */
 function openSearchEngineModal() {
     editingSearchEngine.name = '';
     editingSearchEngine.url = '';
-    editingSearchEngine.isDefault = false;
     isEditingSearchEngine.value = true;
     showSearchEngineDropdown.value = false;
 }
 
-// 保存添加的搜索引擎
+/**
+ * 保存添加的搜索引擎
+ */
 function saveSearchEngine() {
     if (editingSearchEngine.name && editingSearchEngine.url) {
         searchEngines.push({ ...editingSearchEngine });
-        if (editingSearchEngine.isDefault) {
-            searchEngines.forEach((engine, index) => {
-                if (index !== searchEngines.length - 1) {
-                    engine.isDefault = false;
-                }
-            });
-        }
         isEditingSearchEngine.value = false;
         setCurrentSearchEngine();
     } else {
@@ -264,10 +262,30 @@ function saveSearchEngine() {
     }
 }
 
-// 取消编辑搜索引擎
+/**
+ * 取消编辑搜索引擎
+ */
 function cancelEditSearchEngine() {
     isEditingSearchEngine.value = false;
 }
+
+// 书签相关
+
+// 书签列表
+const bookmarks = reactive([]);
+// 是否正在编辑书签
+const isEditing = ref(false);
+// 是否是新增书签
+const isNewBookmark = ref(false);
+// 正在编辑的书签索引
+const editingIndex = ref(-1);
+// 正在编辑的书签
+const editingBookmark = reactive({
+    url: '',
+    name: '',
+    iconType: 'text',
+    icon: ''
+});
 
 // 监听书签列表的变化，保存到本地存储
 watch(bookmarks, (newBookmarks) => {
@@ -276,7 +294,7 @@ watch(bookmarks, (newBookmarks) => {
 
 /**
  * 执行搜索操作
- * 如果搜索词不为空，跳转到 Bing 搜索页面
+ * 如果搜索词不为空，跳转到当前搜索引擎的搜索页面
  */
 function search() {
     if (searchQuery.value.trim()) {
