@@ -134,21 +134,6 @@ const editingSearchEngine = reactive({
 // 搜索查询关键词
 const searchQuery = ref('');
 
-// 书签列表
-const bookmarks = reactive([]);
-// 是否处于编辑状态
-const isEditing = ref(false);
-// 当前编辑的书签索引
-const editingIndex = ref(-1);
-// 是否为新增书签
-const isNewBookmark = ref(false);
-// 当前编辑或新增的书签对象
-const editingBookmark = reactive({
-    icon: '',
-    url: '',
-    name: '',
-    iconType: 'text'
-});
 
 // 组件挂载
 onMounted(() => {
@@ -202,10 +187,9 @@ watch(searchEngines, (newSearchEngines) => {
 
 /**
  * 设置当前激活的搜索引擎
- * 默认使用搜索引擎列表中的最后一个引擎
  */
 function setCurrentSearchEngine() {
-    currentSearchEngine.value = searchEngines[searchEngines.length - 1] || searchEngines[0];
+    currentSearchEngine.value = searchEngines[0];
 }
 
 /**
@@ -222,6 +206,8 @@ function toggleSearchEngineDropdown() {
 function selectSearchEngine(index) {
     currentSearchEngine.value = searchEngines[index];
     showSearchEngineDropdown.value = false;
+    // 对搜索引擎进行重新排序，被选中的放到第一位
+    searchEngines.unshift(searchEngines.splice(index, 1)[0]);
 }
 
 /**
