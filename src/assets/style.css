@@ -556,10 +556,12 @@ select {
   left: -250px;
   width: 250px;
   height: 100%;
-  background-color: #ebebeb7e;
+  background-color: #444;
   color: white;
   transition: left 0.3s ease;
   z-index: 1001;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+  border-right: 1px solid #555;
 }
 
 .sidebar.open {
@@ -572,39 +574,48 @@ select {
   left: 10px;
   width: 35px;
   height: 35px;
-  border-color: transparent;
-  background-color: transparent;
-  color: #333333;
+  border: none;
+  background-color: #666;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.3s ease;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-button:hover {
   opacity: 1;
+  background-color: #888;
 }
 
 .sidebar-content {
   padding: 50px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #444;
 }
 
 .sidebar-content button {
   margin-bottom: 10px;
   width: 100%;
   padding: 10px;
-  background-color: #333333;
+  background-color: #666;
   color: white;
   border: none;
-  border-radius: 0.15rem;
+  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-content button:hover {
-  background-color: #555555;
+  background-color: #888;
 }
 
 .phone-button {
