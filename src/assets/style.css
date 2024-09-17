@@ -607,6 +607,10 @@ select {
   background-color: #555555;
 }
 
+.phone-button {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .modal-content {
     width: 80%;
@@ -664,5 +668,32 @@ select {
   .search-engine-button {
     padding: 1.7rem 0rem;
     font-size: 0rem;
+  }
+
+  .sidebar {
+    left: -100%;
+    width: 100%;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-button {
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .sidebar-content {
+    padding: 60px 20px 20px 20px;
+  }
+
+  .sidebar-content button {
+    padding: 15px;
+    font-size: 1rem;
+  }
+
+  .phone-button {
+    display: block;
   }
 }

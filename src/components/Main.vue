@@ -3,13 +3,14 @@
     <div class="navigation-hub">
 
         <!-- 添加侧边栏按钮 -->
-        <button class="sidebar-button" @click="toggleSidebar">
+        <button class="sidebar-button" @click="showSidebar">
             <span>☰</span>
         </button>
 
         <!-- 侧边栏 -->
-        <div :class="['sidebar', { open: isSidebarOpen }]" @mouseleave="toggleSidebar">
+        <div :class="['sidebar', { open: isSidebarOpen }]" @mouseleave="hideSidebar">
             <div class="sidebar-content">
+                <button @click="hideSidebar" class="phone-button">关闭侧边栏</button>
                 <button @click="showSettingModal">数据管理</button>
                 <button>关于</button>
                 <!-- 其他侧边栏内容 -->
@@ -162,11 +163,13 @@ import { ref, reactive, onMounted, watch } from 'vue';
 
 // 侧边栏状态
 const isSidebarOpen = ref(false);
-
-// 切换侧边栏
-function toggleSidebar() {
-    isSidebarOpen.value = !isSidebarOpen.value;
+function showSidebar() {
+    isSidebarOpen.value = true;
 }
+function hideSidebar() {
+    isSidebarOpen.value = false;
+}
+
 
 // 导入导出相关
 const isSetting = ref(false);
