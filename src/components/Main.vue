@@ -1,6 +1,21 @@
 <template>
     <!-- 导航中心组件 -->
     <div class="navigation-hub">
+
+        <!-- 添加侧边栏按钮 -->
+        <button class="sidebar-button" @click="toggleSidebar">
+            <span>☰</span>
+        </button>
+
+        <!-- 侧边栏 -->
+        <div :class="['sidebar', { open: isSidebarOpen }]" @mouseleave="toggleSidebar">
+            <div class="sidebar-content">
+                <button @click="showSettingModal">数据管理</button>
+                <button>关于</button>
+                <!-- 其他侧边栏内容 -->
+            </div>
+        </div>
+
         <!-- 标题区域 -->
         <div class="logo">
             <img src="../assets/logo.svg" alt="0penai.icu" class="logo-image" />
@@ -123,11 +138,7 @@
             </div>
         </div>
 
-        <!-- 在页面右下角添加一个按钮 -->
-        <button class="import-button" @click="showSettingModal">
-            <!-- <span>⚙️</span> -->
-            <img src="../assets/gear.svg" style="width: 2rem; height: 2rem;"/>
-        </button>
+
         <!-- 直接进行设置的模态框 -->
         <div v-if="isSetting" class="modal">
             <div class="modal-content">
@@ -148,6 +159,14 @@
 
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
+
+// 侧边栏状态
+const isSidebarOpen = ref(false);
+
+// 切换侧边栏
+function toggleSidebar() {
+    isSidebarOpen.value = !isSidebarOpen.value;
+}
 
 // 导入导出相关
 const isSetting = ref(false);

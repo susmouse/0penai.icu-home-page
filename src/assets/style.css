@@ -550,6 +550,63 @@ select {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #ebebeb7e;
+  color: white;
+  transition: left 0.3s ease;
+  z-index: 1001;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: 35px;
+  height: 35px;
+  border-color: transparent;
+  background-color: transparent;
+  color: #333333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-button:hover {
+  opacity: 1;
+}
+
+.sidebar-content {
+  padding: 50px 20px 20px 20px;
+}
+
+.sidebar-content button {
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 10px;
+  background-color: #333333;
+  color: white;
+  border: none;
+  border-radius: 0.15rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-content button:hover {
+  background-color: #555555;
+}
+
 @media (max-width: 768px) {
   .modal-content {
     width: 80%;
