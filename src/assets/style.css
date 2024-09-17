@@ -271,28 +271,6 @@ body {
   color: #333;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
 .icon-image {
   width: 50px;
   /* 放大图标 */
@@ -345,6 +323,7 @@ select {
   width: 100%;
   max-width: 700px;
   margin-bottom: 2rem;
+  z-index: 1000;
 }
 
 .search-engine-selector {
@@ -381,7 +360,6 @@ select {
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10;
   min-width: 150px;
 }
 
@@ -553,15 +531,15 @@ select {
 .sidebar {
   position: fixed;
   top: 0;
-  left: -250px;
-  width: 250px;
+  left: -17rem;
+  width: 15.625rem;
   height: 100%;
   background-color: #444;
   color: white;
   transition: left 0.3s ease;
   z-index: 1001;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
-  border-right: 1px solid #555;
+  box-shadow: 0.125rem 0 0.625rem rgba(0, 0, 0, 0.5);
+  border-right: 0.0625rem solid #555;
 }
 
 .sidebar.open {
@@ -569,27 +547,30 @@ select {
 }
 
 .sidebar-button {
+  /* 位置属性 */
   position: fixed;
   top: 10px;
   left: 10px;
+  /* 尺寸属性 */
   width: 35px;
   height: 35px;
+  /* 边框属性 */
   border: none;
-  background-color: #666;
-  color: white;
+  border-radius: 20%;
+  /* 背景属性 */
+  background-color: transparent;
+  /* 文本属性 */
+  color: #444444;
+  /* 布局属性 */
   display: flex;
   align-items: center;
   justify-content: center;
+  /* 交互属性 */
   cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.3s ease, background-color 0.3s ease;
-  border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-button:hover {
-  opacity: 1;
-  background-color: #888;
+  background-color: #e8e8e8;
 }
 
 .sidebar-content {
@@ -620,6 +601,26 @@ select {
 
 .phone-button {
   display: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @media (max-width: 768px) {
@@ -682,7 +683,7 @@ select {
   }
 
   .sidebar {
-    left: -100%;
+    left: -110%;
     width: 100%;
   }
 

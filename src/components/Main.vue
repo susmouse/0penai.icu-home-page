@@ -160,6 +160,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
+import { gsap } from 'gsap';
 
 // 侧边栏状态
 const isSidebarOpen = ref(false);
@@ -408,6 +409,11 @@ function onDrop(event) {
 
 // 页面初始化进行组件挂载
 onMounted(() => {
+    // 初始化动画
+    gsap.from('.navigation-hub', { opacity: 0, y: -50, duration: 1 });
+    gsap.from('.search-container', { opacity: 0, x: -50, duration: 1, delay: 0.5 });
+    gsap.from('.bookmarks', { opacity: 0, y: 50, duration: 1, delay: 0.75 });
+
     const savedBookmarks = localStorage.getItem('bookmarks');
     if (savedBookmarks) {
         bookmarks.push(...JSON.parse(savedBookmarks));
