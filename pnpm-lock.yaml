@@ -14,6 +14,9 @@ importers:
       gsap:
         specifier: ^3.12.5
         version: 3.12.5
+      particles.js:
+        specifier: ^2.0.0
+        version: 2.0.0
       particlesjs:
         specifier: ^2.2.3
         version: 2.2.3
@@ -419,6 +422,9 @@ packages:
   normalize-wheel-es@1.2.0:
     resolution: {integrity: sha512-Wj7+EJQ8mSuXr2iWfnujrimU35R2W4FAErEyTmJoJ7ucwTn2hOUSsRehMb5RSYkxXGTM7Y9QpvPmp++w5ftoJw==}
 
+  particles.js@2.0.0:
+    resolution: {integrity: sha512-8e0JIqkRbMMPlFBnF9f+92hX1s07jdkd3tqB8uHE9L+cwGGjIYjQM7QLgt0FQ5MZp6SFFYYDm/Y48pqK3ZvJOQ==}
+
   particlesjs@2.2.3:
     resolution: {integrity: sha512-f0rL80Agqdsrnv/uhlLewv+LMdiXHu9MYPzMv0ZLPM06nLx3zmAXMH882fxqO6Uzb91csli8WlWaYd2XPN0d/Q==}
 
@@ -817,6 +823,8 @@ snapshots:
   nanoid@3.3.7: {}
 
   normalize-wheel-es@1.2.0: {}
+
+  particles.js@2.0.0: {}
 
   particlesjs@2.2.3: {}
 

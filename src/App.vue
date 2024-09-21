@@ -11,6 +11,7 @@ import Main from './components/Main.vue'
 
 <style scoped>
 .background {
+  background-color: #FAFAF8;
   position: absolute;
   top: 0;
   left: 0;
