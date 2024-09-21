@@ -299,7 +299,7 @@ function cancelEditSearchEngine() {
 
 /**
  * 执行搜索操作
- * 如果搜索词不为空，跳转到当前搜索引擎的搜索页面
+ * 如果搜索查询不为空，则使用当前搜索引擎进行搜索，并跳转到搜索结果页面
  */
 function search() {
     if (searchQuery.value.trim()) {
@@ -325,7 +325,10 @@ const editingBookmark = reactive({
     icon: ''
 });
 
-// 监听书签列表的变化，保存到本地存储
+/**
+ * 监听书签列表的变化，并将其保存到本地存储中
+ * @param {Array} newBookmarks - 新的书签列表
+ */
 watch(bookmarks, (newBookmarks) => {
     localStorage.setItem('bookmarks', JSON.stringify(newBookmarks));
 }, { deep: true });
