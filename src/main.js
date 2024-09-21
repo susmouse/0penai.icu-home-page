@@ -21,7 +21,7 @@ window.onload = function () {
     maxParticles: 30, // 增加粒子数量，增加动态感
     sizeVariations: 0.7, // 增加粒子大小变化，增加俏皮感
     speed: 0.3, // 稍微增加粒子移动速度，增加动态感
-    color: "#3D3929", // 粒子颜色保持不变
+    color: "#F0EFEA", // 粒子颜色保持不变
     connectParticles: true, // 是否连接粒子
     minDistance: 250, // 减少粒子之间的最小距离，增加连接感
     lineLinked: {
