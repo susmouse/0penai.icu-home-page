@@ -1,4 +1,7 @@
 <template>
+
+    <!-- 粒子效果背景 -->
+    <canvas class="background"></canvas>
     <!-- 导航中心组件 -->
     <div class="navigation-hub">
 
