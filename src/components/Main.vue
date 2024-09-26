@@ -78,6 +78,8 @@
             </div>
         </div>
 
+        <div class="icp-beian-number">粤ICP备2024314909号</div>
+
         <!-- 编辑书签的模态框 -->
         <div v-if="isEditing" class="modal">
             <div class="modal-content">
@@ -115,6 +117,7 @@
             </div>
         </div>
 
+        <!-- 添加搜索引擎的模态框 -->
         <div v-if="isEditingSearchEngine" class="modal">
             <div class="modal-content">
                 <h2>添加搜索引擎</h2>
@@ -142,8 +145,7 @@
             </div>
         </div>
 
-
-        <!-- 直接进行设置的模态框 -->
+        <!-- 通过JSON直接设置当前数据的模态框 -->
         <div v-if="isSetting" class="modal">
             <div class="modal-content">
                 <h2>配置项</h2>
