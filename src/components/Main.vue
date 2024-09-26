@@ -78,7 +78,11 @@
             </div>
         </div>
 
-        <div class="icp-beian-number">粤ICP备2024314909号</div>
+        <!-- 网站信息 -->
+        <!-- <div class="icp-beian-number">粤ICP备2024314909号</div> -->
+        <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank" rel="noopener noreferrer" class="icp-beian-number">
+            粤ICP备2024314909号
+        </a>
 
         <!-- 编辑书签的模态框 -->
         <div v-if="isEditing" class="modal">

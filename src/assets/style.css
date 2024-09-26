@@ -616,6 +616,7 @@ select {
 }
 
 .icp-beian-number {
+  width: auto;
   color: #787878;
   font-size: small;
   position: absolute;
