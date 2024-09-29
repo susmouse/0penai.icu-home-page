@@ -1,5 +1,21 @@
-# Vue 3 + Vite
+# 0penai.icu——是0不是o
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 前言
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+这是为我的域名`0penai.icu`备案而顺便创建的一个主页
+
+## 功能
+
+- 纯静态前端页面
+- 支持自定义收藏网址和搜索引擎
+
+## 技术栈
+
+- VITE
+- VUE3
+- GASP
+- PARTICLES.JS
+
+## 截图
+
+![主页](https://s2.loli.net/2024/09/29/iHGp8ovCtPIyn93.png)
